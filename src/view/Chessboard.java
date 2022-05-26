@@ -43,7 +43,6 @@ public class Chessboard extends JComponent {
     private final ClickController clickController = new ClickController(this);
     private final int CHESS_SIZE;
     private JLabel statusLabel;
-    private String errorMsg;
 
 
     public Chessboard(int width, int height) {
@@ -99,8 +98,16 @@ public class Chessboard extends JComponent {
     }
 
     public void swapChessComponents(ChessComponent chess1, ChessComponent chess2) {
+        int winningRecord = 0;
         // Note that chess1 has higher priority, 'destroys' chess2 if exists.
         if (!(chess2 instanceof EmptySlotComponent)) {
+            if (chess2 instanceof KingChessComponent) {
+                if (currentColor == ChessColor.WHITE) {
+                    winningRecord = 1;
+                } else {
+                    winningRecord = 2;
+                }
+            }
             remove(chess2);
             add(chess2 = new EmptySlotComponent(chess2.getChessboardPoint(), chess2.getLocation(), clickController, CHESS_SIZE));
         }
@@ -112,6 +119,14 @@ public class Chessboard extends JComponent {
 
         chess1.repaint();
         chess2.repaint();
+        if (winningRecord != 0) {
+            if (winningRecord == 1) {
+                JOptionPane.showMessageDialog(null, "Game over. White has won the game.", "EndGame", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(null, "Game over. Black has won the game.", "EndGame", JOptionPane.INFORMATION_MESSAGE);
+            }
+            initializeGame();
+        }
     }
 
     public void initiateEmptyChessboard() {
@@ -193,11 +208,13 @@ public class Chessboard extends JComponent {
                     } else {
                         throw new NoPlayerException("Can not get current player, please check");
                     }
-                    if(i!=8){
+                    if (i != 8) {
                         throw new SizeException("The chessboard is not 8*8, please check");
                     }
+                    break;
                 }
                 if (saveFile.get(i).length() != 8) {
+                    System.out.println(saveFile.get(i).length());
                     throw new SizeException("The chessboard is not 8*8, please check");
                 }
                 for (int j = 0; j < saveFile.get(i).length(); j++) {
@@ -246,7 +263,7 @@ public class Chessboard extends JComponent {
                 }
             }
         } catch (SizeException | NoPlayerException | InvalidChessException e) {
-            JOptionPane.showMessageDialog(null,e.toString(),"ERROR",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, e.toString(), "ERROR", JOptionPane.ERROR_MESSAGE);
             initializeGame();
         }
         repaint();
@@ -273,13 +290,5 @@ public class Chessboard extends JComponent {
 
     public void setStatusLabel(JLabel statusLabel) {
         this.statusLabel = statusLabel;
-    }
-
-    public String getErrorMsg() {
-        return errorMsg;
-    }
-
-    public void setErrorMsg(String errorMsg) {
-        this.errorMsg = errorMsg;
     }
 }
