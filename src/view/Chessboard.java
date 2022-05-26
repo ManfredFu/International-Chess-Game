@@ -1,6 +1,9 @@
 package view;
 
 
+import ExceptionHandle.InvalidChessException;
+import ExceptionHandle.NoPlayerException;
+import ExceptionHandle.SizeException;
 import model.ChessColor;
 import model.ChessComponent;
 import model.EmptySlotComponent;
@@ -40,6 +43,7 @@ public class Chessboard extends JComponent {
     private final ClickController clickController = new ClickController(this);
     private final int CHESS_SIZE;
     private JLabel statusLabel;
+    private String errorMsg;
 
 
     public Chessboard(int width, int height) {
@@ -177,59 +181,73 @@ public class Chessboard extends JComponent {
     public void loadGame(List<String> saveFile) {
         saveFile.forEach(System.out::println);
         initiateEmptyChessboard();
-        for (int i = 0; i < saveFile.size(); i++) {
-            if (i == 8) {
-                if (saveFile.get(i).charAt(0) == 'w') {
-                    currentColor = ChessColor.WHITE;
-                    statusLabel.setText("White is moving!");
+        try {
+            for (int i = 0; i < saveFile.size(); i++) {
+                if (i == saveFile.size() - 1) {
+                    if (saveFile.get(saveFile.size() - 1).charAt(0) == 'w') {
+                        currentColor = ChessColor.WHITE;
+                        statusLabel.setText("White is moving!");
+                    } else if (saveFile.get(saveFile.size() - 1).charAt(0) == 'b') {
+                        currentColor = ChessColor.BLACK;
+                        statusLabel.setText("Black is moving!");
+                    } else {
+                        throw new NoPlayerException("Can not get current player, please check");
+                    }
+                    if(i!=8){
+                        throw new SizeException("The chessboard is not 8*8, please check");
+                    }
                 }
-                if (saveFile.get(i).charAt(0) == 'b') {
-                    currentColor = ChessColor.BLACK;
-                    statusLabel.setText("Black is moving!");
+                if (saveFile.get(i).length() != 8) {
+                    throw new SizeException("The chessboard is not 8*8, please check");
+                }
+                for (int j = 0; j < saveFile.get(i).length(); j++) {
+                    switch (saveFile.get(i).charAt(j)) {
+                        case '_':
+                            break;
+                        case 'K':
+                            initKingOnBoard(i, j, ChessColor.BLACK);
+                            break;
+                        case 'k':
+                            initKingOnBoard(i, j, ChessColor.WHITE);
+                            break;
+                        case 'N':
+                            initKnightOnBoard(i, j, ChessColor.BLACK);
+                            break;
+                        case 'n':
+                            initKnightOnBoard(i, j, ChessColor.WHITE);
+                            break;
+                        case 'P':
+                            initPawnOnBoard(i, j, ChessColor.BLACK);
+                            break;
+                        case 'p':
+                            initPawnOnBoard(i, j, ChessColor.WHITE);
+                            break;
+                        case 'Q':
+                            initQueenOnBoard(i, j, ChessColor.BLACK);
+                            break;
+                        case 'q':
+                            initQueenOnBoard(i, j, ChessColor.WHITE);
+                            break;
+                        case 'R':
+                            initRookOnBoard(i, j, ChessColor.BLACK);
+                            break;
+                        case 'r':
+                            initRookOnBoard(i, j, ChessColor.WHITE);
+                            break;
+                        case 'B':
+                            initBishopOnBoard(i, j, ChessColor.BLACK);
+                            break;
+                        case 'b':
+                            initBishopOnBoard(i, j, ChessColor.WHITE);
+                            break;
+                        default:
+                            throw new InvalidChessException("Invalid chess type detected, please check");
+                    }
                 }
             }
-            for (int j = 0; j < saveFile.get(i).length(); j++) {
-                switch (saveFile.get(i).charAt(j)) {
-                    case '_':
-                        break;
-                    case 'K':
-                        initKingOnBoard(i, j, ChessColor.BLACK);
-                        break;
-                    case 'k':
-                        initKingOnBoard(i, j, ChessColor.WHITE);
-                        break;
-                    case 'N':
-                        initKnightOnBoard(i, j, ChessColor.BLACK);
-                        break;
-                    case 'n':
-                        initKnightOnBoard(i, j, ChessColor.WHITE);
-                        break;
-                    case 'P':
-                        initPawnOnBoard(i, j, ChessColor.BLACK);
-                        break;
-                    case 'p':
-                        initPawnOnBoard(i, j, ChessColor.WHITE);
-                        break;
-                    case 'Q':
-                        initQueenOnBoard(i, j, ChessColor.BLACK);
-                        break;
-                    case 'q':
-                        initQueenOnBoard(i, j, ChessColor.WHITE);
-                        break;
-                    case 'R':
-                        initRookOnBoard(i, j, ChessColor.BLACK);
-                        break;
-                    case 'r':
-                        initRookOnBoard(i, j, ChessColor.WHITE);
-                        break;
-                    case 'B':
-                        initBishopOnBoard(i, j, ChessColor.BLACK);
-                        break;
-                    case 'b':
-                        initBishopOnBoard(i, j, ChessColor.WHITE);
-                        break;
-                }
-            }
+        } catch (SizeException | NoPlayerException | InvalidChessException e) {
+            JOptionPane.showMessageDialog(null,e.toString(),"ERROR",JOptionPane.ERROR_MESSAGE);
+            initializeGame();
         }
         repaint();
     }
@@ -245,16 +263,23 @@ public class Chessboard extends JComponent {
             returnValue.add(i, rowColumns.toString());
             rowColumns.setLength(0);
         }
-        if(currentColor == ChessColor.WHITE){
-            returnValue.add(8,"w");
-        }
-        else {
-            returnValue.add(8,"b");
+        if (currentColor == ChessColor.WHITE) {
+            returnValue.add(8, "w");
+        } else {
+            returnValue.add(8, "b");
         }
         return returnValue;
     }
 
     public void setStatusLabel(JLabel statusLabel) {
         this.statusLabel = statusLabel;
+    }
+
+    public String getErrorMsg() {
+        return errorMsg;
+    }
+
+    public void setErrorMsg(String errorMsg) {
+        this.errorMsg = errorMsg;
     }
 }

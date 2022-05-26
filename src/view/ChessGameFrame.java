@@ -1,8 +1,6 @@
 package view;
 
 import controller.GameController;
-import model.ChessColor;
-import model.ChessComponent;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,6 +16,7 @@ public class ChessGameFrame extends JFrame {
     public final int CHESSBOARD_SIZE;
     private GameController gameController;
     private JLabel statusLabel;
+    private String errorMsg;
 
     public ChessGameFrame(int width, int height) {
         setTitle("Chess Game Ultra Max Pro Ultimate"); //设置标题
@@ -83,7 +82,6 @@ public class ChessGameFrame extends JFrame {
         add(button);
 
         button.addActionListener(e -> {
-            System.out.println("Click load");
             JFileChooser loadChoose = new JFileChooser();
             loadChoose.setFileSelectionMode(JFileChooser.OPEN_DIALOG);
             loadChoose.showOpenDialog(null);
@@ -99,7 +97,6 @@ public class ChessGameFrame extends JFrame {
         button.setFont(new Font("Rockwell", Font.BOLD, 20));
         add(button);
         button.addActionListener(listener -> {
-            System.out.println("Click save");
             JFileChooser saveChoose = new JFileChooser();
             saveChoose.setFileSelectionMode(JFileChooser.OPEN_DIALOG);
             saveChoose.showSaveDialog(null);
