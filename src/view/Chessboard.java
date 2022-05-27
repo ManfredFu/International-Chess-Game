@@ -17,6 +17,8 @@ import controller.ClickController;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,7 +45,7 @@ public class Chessboard extends JComponent {
     private final ClickController clickController = new ClickController(this);
     private final int CHESS_SIZE;
     private JLabel statusLabel;
-
+    private int stepsCounter = 0;
 
     public Chessboard(int width, int height) {
         setLayout(null); // Use absolute layout.
@@ -77,6 +79,9 @@ public class Chessboard extends JComponent {
         }
         repaint();
         statusLabel.setText("Black is moving!");
+        currentColor = ChessColor.BLACK;
+        stepsCounter = 0;
+        saveChessCache();
     }
 
 
@@ -144,6 +149,7 @@ public class Chessboard extends JComponent {
         } else {
             statusLabel.setText("Black is moving!");
         }
+        saveChessCache();
     }
 
     private void initRookOnBoard(int row, int col, ChessColor color) {
@@ -287,8 +293,28 @@ public class Chessboard extends JComponent {
         }
         return returnValue;
     }
+    public void saveChessCache(){
+        try {
+            FileWriter saveWriter = new FileWriter("ChessCache/movement" + stepsCounter + ".txt", false);
+            for (int i = 0; i < saveGame().size(); i++) {
+                saveWriter.write(saveGame().get(i) + "\r\n");
+            }
+            stepsCounter++;
+            saveWriter.close();
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, e.toString(), "ERROR", JOptionPane.ERROR_MESSAGE);
+        }
+    }
 
     public void setStatusLabel(JLabel statusLabel) {
         this.statusLabel = statusLabel;
+    }
+
+    public int getStepsCounter() {
+        return stepsCounter;
+    }
+
+    public void setStepsCounter(int stepsCounter) {
+        this.stepsCounter = stepsCounter;
     }
 }

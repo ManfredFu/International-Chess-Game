@@ -14,9 +14,9 @@ public class ChessGameFrame extends JFrame {
     private final int WIDTH;
     private final int HEIGTH;
     public final int CHESSBOARD_SIZE;
+    private Chessboard chessboard;
     private GameController gameController;
     private JLabel statusLabel;
-    private String errorMsg;
 
     public ChessGameFrame(int width, int height) {
         setTitle("Chess Game Ultra Max Pro Ultimate"); //设置标题
@@ -30,6 +30,8 @@ public class ChessGameFrame extends JFrame {
         setLayout(null);
 
         addMovingChessLabel();
+        addUndoButton();
+        addReplayButton();
         addChessboard();
         addResetButton();
         addLoadBrowseButton();
@@ -47,6 +49,7 @@ public class ChessGameFrame extends JFrame {
         chessboard.setLocation(HEIGTH / 10, HEIGTH / 10);
         chessboard.initializeGame();
         add(chessboard);
+        this.chessboard = chessboard;
     }
 
     /**
@@ -65,7 +68,7 @@ public class ChessGameFrame extends JFrame {
      */
 
     private void addResetButton() {
-        JButton button = new JButton("Reset");
+        JButton button = new JButton("RESET");
         button.addActionListener((e) -> gameController.initialGame());
         button.setLocation(HEIGTH, HEIGTH / 10 + 120);
         button.setSize(200, 60);
@@ -75,7 +78,7 @@ public class ChessGameFrame extends JFrame {
 
 
     private void addLoadBrowseButton() {
-        JButton button = new JButton("LoadBrowse");
+        JButton button = new JButton("LOAD");
         button.setLocation(HEIGTH, HEIGTH / 10 + 240);
         button.setSize(200, 60);
         button.setFont(new Font("Rockwell", Font.BOLD, 20));
@@ -91,7 +94,7 @@ public class ChessGameFrame extends JFrame {
     }
 
     private void addSaveButton() {
-        JButton button = new JButton("Save");
+        JButton button = new JButton("SAVE");
         button.setLocation(HEIGTH, HEIGTH / 10 + 340);
         button.setSize(200, 60);
         button.setFont(new Font("Rockwell", Font.BOLD, 20));
@@ -102,6 +105,28 @@ public class ChessGameFrame extends JFrame {
             saveChoose.showSaveDialog(null);
             String path = saveChoose.getSelectedFile().getPath();
             gameController.saveGame(path);
+        });
+    }
+
+    private void addUndoButton() {
+        JButton button = new JButton("UNDO");
+        button.setLocation(HEIGTH, HEIGTH / 10 + 440);
+        button.setSize(200, 60);
+        button.setFont(new Font("Rockwell", Font.BOLD, 20));
+        add(button);
+        button.addActionListener(listener -> {
+            gameController.undo(chessboard.getStepsCounter());
+            chessboard.setStepsCounter(chessboard.getStepsCounter() - 1);
+        });
+    }
+    private void addReplayButton(){
+        JButton button = new JButton("REPLAY");
+        button.setLocation(HEIGTH, HEIGTH / 10 + 540);
+        button.setSize(200, 60);
+        button.setFont(new Font("Rockwell", Font.BOLD, 20));
+        add(button);
+        button.addActionListener(listener ->{
+            gameController.replay();
         });
     }
 }
