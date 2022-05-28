@@ -16,20 +16,10 @@ import java.util.List;
 public class GameController {
     private Chessboard chessboard;
     int stepCounter = 0;
+    Timer timer = new Timer(1000, null);
 
     public GameController(Chessboard chessboard) {
         this.chessboard = chessboard;
-    }
-
-    public List<String> loadGameFromFile(String path) {
-        try {
-            List<String> chessData = Files.readAllLines(Path.of(path));
-            chessboard.loadGame(chessData);
-            return chessData;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     public void loadGameFromFile(File saveFile) {
@@ -82,10 +72,10 @@ public class GameController {
             } catch (IOException ex) {
                 JOptionPane.showMessageDialog(null, "Replay End!", "INFORM", JOptionPane.INFORMATION_MESSAGE);
                 stepCounter = 0;
-                return;
+                timer.stop();
             }
         };
-        Timer timer = new Timer(1000, fileLoader);
+        timer = new Timer(1000, fileLoader);
         timer.start();
     }
 

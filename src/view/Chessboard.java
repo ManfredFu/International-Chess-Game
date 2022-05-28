@@ -17,6 +17,8 @@ import controller.ClickController;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -44,8 +46,9 @@ public class Chessboard extends JComponent {
     //all chessComponents in this chessboard are shared only one model controller
     private final ClickController clickController = new ClickController(this);
     private final int CHESS_SIZE;
-    private JLabel statusLabel;
-    private int stepsCounter = 0;
+    private JLabel statusLabel, countDown;
+    private int stepsCounter = 0, maximumTime = 30,timeLeft = maximumTime;
+    private Timer switchPlayer = new Timer(1000, null);
 
     public Chessboard(int width, int height) {
         setLayout(null); // Use absolute layout.
@@ -81,7 +84,9 @@ public class Chessboard extends JComponent {
         statusLabel.setText("Black is moving!");
         currentColor = ChessColor.BLACK;
         stepsCounter = 0;
+        releaseCache();
         saveChessCache();
+        countDown();
     }
 
 
@@ -150,6 +155,7 @@ public class Chessboard extends JComponent {
             statusLabel.setText("Black is moving!");
         }
         saveChessCache();
+        timeLeft = maximumTime;
     }
 
     private void initRookOnBoard(int row, int col, ChessColor color) {
@@ -273,6 +279,7 @@ public class Chessboard extends JComponent {
             initializeGame();
         }
         repaint();
+        countDown();
     }
 
     public List<String> saveGame() {
@@ -293,7 +300,8 @@ public class Chessboard extends JComponent {
         }
         return returnValue;
     }
-    public void saveChessCache(){
+
+    public void saveChessCache() {
         try {
             FileWriter saveWriter = new FileWriter("ChessCache/movement" + stepsCounter + ".txt", false);
             for (int i = 0; i < saveGame().size(); i++) {
@@ -306,8 +314,39 @@ public class Chessboard extends JComponent {
         }
     }
 
+    public void releaseCache() {
+        File file = new File("C:\\Users\\XR Fu\\Desktop\\ChessDemo v0.1\\ChessCache");
+        File[] files = file.listFiles();
+        assert files != null;
+        for (File f : files) {
+            f.delete();
+        }
+    }
+
+    public void countDown() {
+        if(switchPlayer.isRunning()){
+            switchPlayer.stop();
+            timeLeft = maximumTime;
+        }
+        ActionListener timeListener = e -> {
+            if (timeLeft == 0) {
+                swapColor();
+                this.timeLeft = maximumTime;
+            }
+            countDown.setText("Time left:" + timeLeft);
+            timeLeft--;
+        };
+        switchPlayer = new Timer(1000, timeListener);
+        countDown.setText("Time left:" + timeLeft);
+        switchPlayer.start();
+    }
+
     public void setStatusLabel(JLabel statusLabel) {
         this.statusLabel = statusLabel;
+    }
+
+    public void setCountDown(JLabel countDown) {
+        this.countDown = countDown;
     }
 
     public int getStepsCounter() {

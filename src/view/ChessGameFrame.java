@@ -16,7 +16,7 @@ public class ChessGameFrame extends JFrame {
     public final int CHESSBOARD_SIZE;
     private Chessboard chessboard;
     private GameController gameController;
-    private JLabel statusLabel;
+    private JLabel statusLabel,countDown;
 
     public ChessGameFrame(int width, int height) {
         setTitle("Chess Game Ultra Max Pro Ultimate"); //设置标题
@@ -30,6 +30,7 @@ public class ChessGameFrame extends JFrame {
         setLayout(null);
 
         addMovingChessLabel();
+        addCountDown();
         addUndoButton();
         addReplayButton();
         addChessboard();
@@ -45,6 +46,7 @@ public class ChessGameFrame extends JFrame {
     private void addChessboard() {
         Chessboard chessboard = new Chessboard(CHESSBOARD_SIZE, CHESSBOARD_SIZE);
         chessboard.setStatusLabel(statusLabel);
+        chessboard.setCountDown(this.countDown);
         gameController = new GameController(chessboard);
         chessboard.setLocation(HEIGTH / 10, HEIGTH / 10);
         chessboard.initializeGame();
@@ -90,6 +92,9 @@ public class ChessGameFrame extends JFrame {
             loadChoose.showOpenDialog(null);
             File f = loadChoose.getSelectedFile();
             gameController.loadGameFromFile(f);
+            chessboard.releaseCache();
+            chessboard.setStepsCounter(0);
+            chessboard.saveChessCache();
         });
     }
 
@@ -119,14 +124,22 @@ public class ChessGameFrame extends JFrame {
             chessboard.setStepsCounter(chessboard.getStepsCounter() - 1);
         });
     }
-    private void addReplayButton(){
+
+    private void addReplayButton() {
         JButton button = new JButton("REPLAY");
         button.setLocation(HEIGTH, HEIGTH / 10 + 540);
         button.setSize(200, 60);
         button.setFont(new Font("Rockwell", Font.BOLD, 20));
         add(button);
-        button.addActionListener(listener ->{
+        button.addActionListener(listener -> {
             gameController.replay();
         });
+    }
+    private void addCountDown(){
+        countDown = new JLabel();
+        countDown.setLocation(HEIGTH, HEIGTH / 10-50);
+        countDown.setSize(300, 60);
+        countDown.setFont(new Font("Rockwell", Font.BOLD, 20));
+        add(countDown);
     }
 }
