@@ -1,5 +1,6 @@
 package model;
 
+import view.Chessboard;
 import view.ChessboardPoint;
 import controller.ClickController;
 
@@ -26,7 +27,6 @@ public class RookChessComponent extends ChessComponent {
      * 车棋子对象自身的图片，是上面两种中的一种
      */
     private Image rookImage;
-
     /**
      * 读取加载车棋子的图片
      *
@@ -101,6 +101,28 @@ public class RookChessComponent extends ChessComponent {
         }
         return false;
     }
+    public List<ChessboardPoint> canMoveTo(ChessComponent[][] chessComponents) {
+        ChessboardPoint source = getChessboardPoint();
+        List<ChessboardPoint> returnValue = new ArrayList<>();
+        ChessboardPoint nowMovingTo;
+        for (int i = 1; i < 8; i = i + 2) {
+            for (int j = 1; j < 8; j++) {
+                nowMovingTo = source.offset(generalMoveDirection[i][0] * j, generalMoveDirection[i][1] * j);
+                if (nowMovingTo == null) {
+                    break;
+                }
+                if (chessComponents[source.getX() + generalMoveDirection[i][0] * j][source.getY() + generalMoveDirection[i][1] * j].chessColor == ChessColor.NONE) {
+                    returnValue.add(nowMovingTo);
+                } else if (chessComponents[source.getX() + generalMoveDirection[i][0] * j][source.getY() + generalMoveDirection[i][1] * j].chessColor != ChessColor.NONE) {
+                    if (chessComponents[source.getX() + generalMoveDirection[i][0] * j][source.getY() + generalMoveDirection[i][1] * j].chessColor != this.chessColor) {
+                        returnValue.add(nowMovingTo);
+                    }
+                    break;
+                }
+            }
+        }
+        return returnValue;
+    }
 
     /**
      * 注意这个方法，每当窗体受到了形状的变化，或者是通知要进行绘图的时候，就会调用这个方法进行画图。
@@ -116,6 +138,10 @@ public class RookChessComponent extends ChessComponent {
         if (isSelected()) { // Highlights the model if selected.
             g.setColor(Color.RED);
             g.drawOval(0, 0, getWidth() , getHeight());
+        }
+        if(isCanBeMovedTo()){
+            g.setColor(Color.CYAN);
+            g.fillRect(0,0,getWidth(),getHeight());
         }
     }
     public char getChessType(ChessColor chessColor){

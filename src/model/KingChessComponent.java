@@ -62,6 +62,22 @@ public class KingChessComponent extends ChessComponent {
         return false;
     }
 
+    public List<ChessboardPoint> canMoveTo(ChessComponent[][] chessComponents) {
+        ChessboardPoint source = getChessboardPoint();
+        List<ChessboardPoint> returnValue = new ArrayList<>();
+        ChessboardPoint nowMovingTo;
+        for (int i = 0; i < 8; i++) {
+            nowMovingTo = source.offset(generalMoveDirection[i][0], generalMoveDirection[i][1]);
+            if (nowMovingTo == null) {
+                continue;
+            }
+            if (chessComponents[nowMovingTo.getX()][nowMovingTo.getY()].getChessColor() != chessColor) {
+                returnValue.add(nowMovingTo);
+            }
+        }
+        return returnValue;
+    }
+
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.drawImage(kingImage, 0, 0, getWidth(), getHeight(), this);
@@ -70,12 +86,16 @@ public class KingChessComponent extends ChessComponent {
             g.setColor(Color.RED);
             g.drawOval(0, 0, getWidth(), getHeight());
         }
-    }
-    public char getChessType(ChessColor chessColor){
-        if(chessColor == ChessColor.BLACK){
-            return 'K';
+        if(isCanBeMovedTo()){
+            g.setColor(Color.CYAN);
+            g.drawOval(0,0,getWidth(),getHeight());
         }
-        else {
+    }
+
+    public char getChessType(ChessColor chessColor) {
+        if (chessColor == ChessColor.BLACK) {
+            return 'K';
+        } else {
             return 'k';
         }
     }

@@ -3,8 +3,12 @@ package controller;
 
 import model.ChessComponent;
 import view.Chessboard;
+import view.ChessboardPoint;
 
-public class ClickController {
+import javax.swing.*;
+import java.util.List;
+
+public class ClickController extends JComponent {
     private final Chessboard chessboard;
     private ChessComponent first;
 
@@ -17,19 +21,24 @@ public class ClickController {
             if (handleFirst(chessComponent)) {
                 chessComponent.setSelected(true);
                 first = chessComponent;
+                chessboard.aimSetterTrue(chessboard.convertPointToComponent(first.canMoveTo(chessboard.getChessComponents())));
                 first.repaint();
             }
         } else {
             if (first == chessComponent) { // 再次点击取消选取
                 chessComponent.setSelected(false);
+                chessboard.aimSetterFalse(chessboard.convertPointToComponent(first.canMoveTo(chessboard.getChessComponents())));
                 ChessComponent recordFirst = first;
                 first = null;
                 recordFirst.repaint();
             } else if (handleSecond(chessComponent)) {
                 //repaint in swap chess method.
+                chessboard.aimSetterFalse(chessboard.convertPointToComponent(first.canMoveTo(chessboard.getChessComponents())));
                 chessboard.swapChessComponents(first, chessComponent);
+                System.out.println(first.getChessColor());
+                System.out.println(first.getChessboardPoint());
+                chessboard.checkMate(first.canMoveTo(chessboard.getChessComponents()),first.getChessColor());
                 chessboard.swapColor();
-
                 first.setSelected(false);
                 first = null;
             }

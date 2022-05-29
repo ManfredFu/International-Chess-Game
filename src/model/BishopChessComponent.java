@@ -1,6 +1,7 @@
 package model;
 
 import controller.ClickController;
+import view.Chessboard;
 import view.ChessboardPoint;
 
 import javax.imageio.ImageIO;
@@ -14,7 +15,6 @@ public class BishopChessComponent extends ChessComponent {
     private static Image BISHOP_WHITE;
     private static Image BISHOP_BLACK;
     private Image bishopImage;
-    protected ChessColor chessColor;
 
     public void loadResource() throws IOException {
         if (BISHOP_WHITE == null) {
@@ -69,6 +69,30 @@ public class BishopChessComponent extends ChessComponent {
         }
         return false;
     }
+    public List<ChessboardPoint> canMoveTo(ChessComponent[][] chessComponents) {
+        ChessboardPoint source = getChessboardPoint();
+        List<ChessboardPoint> returnValue = new ArrayList<>();
+        ChessboardPoint nowMovingTo;
+        for (int i = 0; i < 8; i = i + 2) {
+            for (int j = 1; j < 8; j++) {
+                nowMovingTo = source.offset(generalMoveDirection[i][0] * j, generalMoveDirection[i][1] * j);
+                if (nowMovingTo == null) {
+                    break;
+                }
+                if (chessComponents[source.getX() + generalMoveDirection[i][0] * j][source.getY() + generalMoveDirection[i][1] * j].chessColor == ChessColor.NONE) {
+                    returnValue.add(nowMovingTo);
+                } else if (chessComponents[source.getX() + generalMoveDirection[i][0] * j][source.getY() + generalMoveDirection[i][1] * j].chessColor != ChessColor.NONE) {
+                    if (chessComponents[source.getX() + generalMoveDirection[i][0] * j][source.getY() + generalMoveDirection[i][1] * j].chessColor != this.chessColor) {
+                        returnValue.add(nowMovingTo);
+                        System.out.println(this.chessColor);
+                    }
+                    break;
+                }
+            }
+        }
+        System.out.println(returnValue);
+        return returnValue;
+    }
 
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -77,6 +101,10 @@ public class BishopChessComponent extends ChessComponent {
         if (isSelected()) {
             g.setColor(Color.RED);
             g.drawOval(0, 0, getWidth(), getHeight());
+        }
+        if(isCanBeMovedTo()){
+            g.setColor(Color.CYAN);
+            g.drawOval(0,0,getWidth(),getHeight());
         }
     }
     public char getChessType(ChessColor chessColor){

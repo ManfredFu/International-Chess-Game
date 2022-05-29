@@ -47,7 +47,7 @@ public class Chessboard extends JComponent {
     private final ClickController clickController = new ClickController(this);
     private final int CHESS_SIZE;
     private JLabel statusLabel, countDown;
-    private int stepsCounter = 0, maximumTime = 30,timeLeft = maximumTime;
+    private int stepsCounter = 0, maximumTime = 30, timeLeft = maximumTime;
     private Timer switchPlayer = new Timer(1000, null);
 
     public Chessboard(int width, int height) {
@@ -324,7 +324,7 @@ public class Chessboard extends JComponent {
     }
 
     public void countDown() {
-        if(switchPlayer.isRunning()){
+        if (switchPlayer.isRunning()) {
             switchPlayer.stop();
             timeLeft = maximumTime;
         }
@@ -340,6 +340,54 @@ public class Chessboard extends JComponent {
         countDown.setText("Time left:" + timeLeft);
         switchPlayer.start();
     }
+
+    public List<ChessComponent> convertPointToComponent(List<ChessboardPoint> chessboardPoints) {
+        List<ChessComponent> chessComponents = new ArrayList<>();
+        for (ChessboardPoint Points : chessboardPoints) {
+            ChessComponent nowComponent = this.chessComponents[Points.getX()][Points.getY()];
+            chessComponents.add(nowComponent);
+        }
+        return chessComponents;
+    }
+
+    public void aimSetterTrue(List<ChessComponent> chessComponents) {
+        for (ChessComponent chessComponent : chessComponents) {
+            chessComponent.setCanBeMovedTo(true);
+            chessComponent.repaint();
+        }
+    }
+
+    public void aimSetterFalse(List<ChessComponent> chessComponents) {
+        for (ChessComponent chessComponent : chessComponents) {
+            chessComponent.setCanBeMovedTo(false);
+            chessComponent.repaint();
+        }
+    }
+
+    public void checkMate(List<ChessboardPoint> chessboardPoints, ChessColor chessColor) {
+        if (chessColor == ChessColor.BLACK) {
+            for (int i = 0; i < 8; i++) {
+                for (int j = 0; j < 8; j++) {
+                    if (chessComponents[i][j].getChessType(ChessColor.WHITE) == 'k') {
+                        if (chessboardPoints.contains(new ChessboardPoint(i, j))) {
+                            JOptionPane.showMessageDialog(null, "BLACK CHECKMATE!", "CHECK", JOptionPane.WARNING_MESSAGE);
+                        }
+                    }
+                }
+            }
+        } else {
+            for (int i = 0; i < 8; i++) {
+                for (int j = 0; j < 8; j++) {
+                    if (chessComponents[i][j].getChessType(ChessColor.BLACK) == 'K') {
+                        if (chessboardPoints.contains(new ChessboardPoint(i, j))) {
+                            JOptionPane.showMessageDialog(null, "WHITE CHECKMATE!", "CHECK", JOptionPane.WARNING_MESSAGE);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 
     public void setStatusLabel(JLabel statusLabel) {
         this.statusLabel = statusLabel;

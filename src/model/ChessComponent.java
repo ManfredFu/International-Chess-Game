@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * 这个类是一个抽象类，主要表示8*8棋盘上每个格子的棋子情况，当前有两个子类继承它，分别是EmptySlotComponent(空棋子)和RookChessComponent(车)。
@@ -37,7 +38,7 @@ public abstract class ChessComponent extends JComponent {
      */
     private ChessboardPoint chessboardPoint;
     protected final ChessColor chessColor;
-    private boolean selected;
+    private boolean selected, canBeMovedTo;
     int[][] generalMoveDirection = new int[][]{{-1, -1}, {-1, 0}, {-1, 1}, {0, 1}, {1, 1}, {1, 0}, {1, -1}, {0, -1}};
 
     protected ChessComponent(ChessboardPoint chessboardPoint, Point location, ChessColor chessColor, ClickController clickController, int size) {
@@ -47,6 +48,7 @@ public abstract class ChessComponent extends JComponent {
         this.chessboardPoint = chessboardPoint;
         this.chessColor = chessColor;
         this.selected = false;
+        this.canBeMovedTo = false;
         this.clickController = clickController;
     }
 
@@ -66,10 +68,14 @@ public abstract class ChessComponent extends JComponent {
     public boolean isSelected() {
         return selected;
     }
+    public boolean isCanBeMovedTo(){
+        return canBeMovedTo;
+    }
 
     public void setSelected(boolean selected) {
         this.selected = selected;
     }
+
 
     /**
      * @param another 主要用于和另外一个棋子交换位置
@@ -109,6 +115,8 @@ public abstract class ChessComponent extends JComponent {
      */
     public abstract boolean canMoveTo(ChessComponent[][] chessboard, ChessboardPoint destination);
 
+    public abstract List<ChessboardPoint> canMoveTo(ChessComponent[][] chessComponents);
+
     /**
      * 这个方法主要用于加载一些特定资源，如棋子图片等等。
      *
@@ -124,6 +132,12 @@ public abstract class ChessComponent extends JComponent {
         g.setColor(squareColor);
         g.fillRect(0, 0, this.getWidth(), this.getHeight());
     }
+
+    public void setCanBeMovedTo(boolean canBeMovedTo) {
+        this.canBeMovedTo = canBeMovedTo;
+    }
+
     public abstract char getChessType(ChessColor chessColor);
 }
+
 

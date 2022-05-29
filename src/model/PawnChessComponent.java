@@ -1,6 +1,7 @@
 package model;
 
 import controller.ClickController;
+import view.Chessboard;
 import view.ChessboardPoint;
 
 import javax.imageio.ImageIO;
@@ -107,6 +108,68 @@ public class PawnChessComponent extends ChessComponent {
         }
         return false;
     }
+    public List<ChessboardPoint> canMoveTo(ChessComponent[][] chessComponents) {
+        ChessboardPoint source = getChessboardPoint();
+        int xAxis = source.getX();
+        int yAxis = source.getY();
+        List<ChessboardPoint> returnValue = new ArrayList<>();
+        if (chessColor == ChessColor.WHITE) {
+            if (source.getX() == 6) {
+                if (chessComponents[source.getX() - 1][source.getY()].getChessColor() == ChessColor.NONE) {
+                    returnValue.add(new ChessboardPoint(xAxis - 1, yAxis));
+                    if (chessComponents[source.getX() - 2][source.getY()].getChessColor() == ChessColor.NONE) {
+                        returnValue.add(new ChessboardPoint(xAxis - 2, yAxis));
+                    }
+                }
+            }
+            if (source.getX() != 6) {
+                if (source.offset(-1, 0) != null) {
+                    if (chessComponents[source.getX() - 1][source.getY()].getChessColor() == ChessColor.NONE) {
+                        returnValue.add(new ChessboardPoint(xAxis - 1, yAxis));
+                    }
+                }
+            }
+            if (source.offset(-1, -1) != null) {
+                if (chessComponents[source.getX() - 1][source.getY() - 1].getChessColor() != chessColor && chessComponents[source.getX() - 1][source.getY() - 1].getChessColor() != ChessColor.NONE) {
+                    returnValue.add(new ChessboardPoint(xAxis - 1, yAxis - 1));
+                }
+            }
+            if (source.offset(-1, +1) != null) {
+                if (chessComponents[source.getX() - 1][source.getY() + 1].getChessColor() != chessColor && chessComponents[source.getX() - 1][source.getY() + 1].getChessColor() != ChessColor.NONE) {
+                    returnValue.add(new ChessboardPoint(xAxis - 1, yAxis + 1));
+                }
+            }
+        }
+        if (chessColor == ChessColor.BLACK) {
+            if (source.getX() == 1) {
+                if (chessComponents[source.getX() + 1][source.getY()].getChessColor() == ChessColor.NONE) {
+                    returnValue.add(new ChessboardPoint(xAxis + 1, yAxis));
+                    if (chessComponents[source.getX() + 2][source.getY()].getChessColor() == ChessColor.NONE) {
+                        returnValue.add(new ChessboardPoint(xAxis + 2, yAxis));
+                    }
+                }
+            }
+            if (source.getX() != 1) {
+                if (source.offset(+1, 0) != null) {
+                    if (chessComponents[source.getX() + 1][source.getY()].getChessColor() == ChessColor.NONE) {
+                        returnValue.add(new ChessboardPoint(xAxis + 1, yAxis));
+                    }
+                }
+            }
+            if (source.offset(+1, +1) != null) {
+                if (chessComponents[source.getX() + 1][source.getY() + 1].getChessColor() != chessColor && chessComponents[source.getX() + 1][source.getY() + 1].getChessColor() != ChessColor.NONE) {
+                    returnValue.add(new ChessboardPoint(xAxis + 1, yAxis + 1));
+                }
+            }
+            if (source.offset(+1, -1) != null) {
+                if (chessComponents[source.getX() + 1][source.getY() - 1].getChessColor() != chessColor && chessComponents[source.getX() + 1][source.getY() - 1].getChessColor() != ChessColor.NONE) {
+                    returnValue.add(new ChessboardPoint(xAxis + 1, yAxis - 1));
+                }
+            }
+        }
+        return returnValue;
+    }
+
 
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -115,6 +178,10 @@ public class PawnChessComponent extends ChessComponent {
         if (isSelected()) {
             g.setColor(Color.RED);
             g.drawOval(0, 0, getWidth(), getHeight());
+        }
+        if(isCanBeMovedTo()){
+            g.setColor(Color.CYAN);
+            g.drawOval(0,0,getWidth(),getHeight());
         }
     }
     public char getChessType(ChessColor chessColor){
