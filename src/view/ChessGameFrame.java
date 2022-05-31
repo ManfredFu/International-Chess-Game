@@ -120,8 +120,8 @@ public class ChessGameFrame extends JFrame {
         button.setFont(new Font("Rockwell", Font.BOLD, 20));
         add(button);
         button.addActionListener(listener -> {
+            System.out.println(chessboard.getStepsCounter());
             gameController.undo(chessboard.getStepsCounter());
-            chessboard.setStepsCounter(chessboard.getStepsCounter() - 1);
         });
     }
 

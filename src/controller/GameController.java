@@ -57,8 +57,10 @@ public class GameController {
         try {
             List<String> chessData = Files.readAllLines(Path.of("ChessCache/movement" + (stepCounter - 2) + ".txt"));
             chessboard.loadGame(chessData);
+            chessboard.setStepsCounter(stepCounter - 1);
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, e.toString(), "ERROR", JOptionPane.ERROR_MESSAGE);
+            chessboard.setStepsCounter(1);
         }
     }
 

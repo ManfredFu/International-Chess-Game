@@ -1,12 +1,11 @@
 package controller;
 
 
+import model.ChessColor;
 import model.ChessComponent;
 import view.Chessboard;
-import view.ChessboardPoint;
 
 import javax.swing.*;
-import java.util.List;
 
 public class ClickController extends JComponent {
     private final Chessboard chessboard;
@@ -37,8 +36,10 @@ public class ClickController extends JComponent {
                 chessboard.swapChessComponents(first, chessComponent);
                 System.out.println(first.getChessColor());
                 System.out.println(first.getChessboardPoint());
-                chessboard.checkMate(first.canMoveTo(chessboard.getChessComponents()),first.getChessColor());
-                chessboard.swapColor();
+                chessboard.checkMate(first,first.canMoveTo(chessboard.getChessComponents()), first.getChessColor());
+                if (chessComponent.getChessType(ChessColor.WHITE) != 'k' || chessComponent.getChessType(ChessColor.BLACK) != 'K') {
+                    chessboard.swapColor();
+                }
                 first.setSelected(false);
                 first = null;
             }

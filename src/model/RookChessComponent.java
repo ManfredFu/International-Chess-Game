@@ -141,7 +141,7 @@ public class RookChessComponent extends ChessComponent {
         }
         if(isCanBeMovedTo()){
             g.setColor(Color.CYAN);
-            g.fillRect(0,0,getWidth(),getHeight());
+            g.drawOval(0,0,getWidth(),getHeight());
         }
     }
     public char getChessType(ChessColor chessColor){

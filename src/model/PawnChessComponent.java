@@ -26,7 +26,7 @@ public class PawnChessComponent extends ChessComponent {
         }
     }
 
-    private void initiateBishopImage(ChessColor color) {
+    private void initiatePawnImage(ChessColor color) {
         try {
             loadResource();
             if (color == ChessColor.WHITE) {
@@ -41,7 +41,7 @@ public class PawnChessComponent extends ChessComponent {
 
     public PawnChessComponent(ChessboardPoint chessboardPoint, Point location, ChessColor color, ClickController listener, int size) {
         super(chessboardPoint, location, color, listener, size);
-        initiateBishopImage(color);
+        initiatePawnImage(color);
     }
 
     public boolean canMoveTo(ChessComponent[][] chessComponents, ChessboardPoint destination) {

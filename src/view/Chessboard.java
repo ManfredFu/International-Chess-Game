@@ -83,8 +83,8 @@ public class Chessboard extends JComponent {
         repaint();
         statusLabel.setText("Black is moving!");
         currentColor = ChessColor.BLACK;
-        stepsCounter = 0;
         releaseCache();
+        stepsCounter = 0;
         saveChessCache();
         countDown();
     }
@@ -364,7 +364,7 @@ public class Chessboard extends JComponent {
         }
     }
 
-    public void checkMate(List<ChessboardPoint> chessboardPoints, ChessColor chessColor) {
+    public void checkMate(ChessComponent chessComponent,List<ChessboardPoint> chessboardPoints, ChessColor chessColor) {
         if (chessColor == ChessColor.BLACK) {
             for (int i = 0; i < 8; i++) {
                 for (int j = 0; j < 8; j++) {
@@ -386,6 +386,7 @@ public class Chessboard extends JComponent {
                 }
             }
         }
+        chessComponent.repaint();
     }
 
 
