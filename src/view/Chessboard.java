@@ -81,8 +81,8 @@ public class Chessboard extends JComponent {
             initPawnOnBoard(CHESSBOARD_SIZE - 2, i, ChessColor.WHITE);
         }
         repaint();
-        statusLabel.setText("Black is moving!");
-        currentColor = ChessColor.BLACK;
+        statusLabel.setText("White is moving!");
+        currentColor = ChessColor.WHITE;
         releaseCache();
         stepsCounter = 0;
         saveChessCache();
@@ -315,7 +315,7 @@ public class Chessboard extends JComponent {
     }
 
     public void releaseCache() {
-        File file = new File("C:\\Users\\XR Fu\\Desktop\\ChessDemo v0.1\\ChessCache");
+        File file = new File("ChessCache");
         File[] files = file.listFiles();
         assert files != null;
         for (File f : files) {
