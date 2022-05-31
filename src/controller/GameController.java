@@ -57,6 +57,8 @@ public class GameController {
         try {
             List<String> chessData = Files.readAllLines(Path.of("ChessCache/movement" + (stepCounter - 2) + ".txt"));
             chessboard.loadGame(chessData);
+            File file = new File("ChessCache/movement" + stepCounter + ".txt");
+            file.delete();
             chessboard.setStepsCounter(stepCounter - 1);
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, e.toString(), "ERROR", JOptionPane.ERROR_MESSAGE);
