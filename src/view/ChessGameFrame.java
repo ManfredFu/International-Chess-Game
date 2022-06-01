@@ -125,6 +125,7 @@ public class ChessGameFrame extends JFrame {
         layeredPane.add(button,JLayeredPane.MODAL_LAYER);
 
         button.addActionListener(e -> {
+
             JFileChooser loadChoose = new JFileChooser();
             loadChoose.setFileSelectionMode(JFileChooser.OPEN_DIALOG);
             loadChoose.showOpenDialog(null);

@@ -1,10 +1,10 @@
 package controller;
 
 import ExceptionHandle.IncorrectFileTypeException;
+import model.ChessComponent;
 import view.Chessboard;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileWriter;
@@ -16,6 +16,7 @@ import java.util.List;
 public class GameController {
     private Chessboard chessboard;
     int stepCounter = 0;
+    private ChessComponent chessComponent;
     Timer timer = new Timer(1000, null);
 
     public GameController(Chessboard chessboard) {
@@ -57,7 +58,7 @@ public class GameController {
         try {
             List<String> chessData = Files.readAllLines(Path.of("ChessCache/movement" + (stepCounter - 2) + ".txt"));
             chessboard.loadGame(chessData);
-            File file = new File("ChessCache/movement" + stepCounter + ".txt");
+            File file = new File("ChessCache/movement" + (stepCounter-1) + ".txt");
             file.delete();
             chessboard.setStepsCounter(stepCounter - 1);
         } catch (IOException e) {
@@ -85,5 +86,9 @@ public class GameController {
 
     public void initialGame() {
         chessboard.initializeGame();
+    }
+
+    public void setChessComponent(ChessComponent chessComponent) {
+        this.chessComponent = chessComponent;
     }
 }

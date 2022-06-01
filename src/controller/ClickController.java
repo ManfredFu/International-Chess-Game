@@ -37,9 +37,11 @@ public class ClickController extends JComponent {
                 if (chessComponent.getChessType(ChessColor.WHITE) != 'k' || chessComponent.getChessType(ChessColor.BLACK) != 'K') {
                     chessboard.swapColor();
                 }
-                first.setSelected(false);
-                chessboard.checkMate(first,first.canMoveTo(chessboard.getChessComponents()), first.getChessColor());
-                first = null;
+                if(first != null) {
+                    first.setSelected(false);
+                    chessboard.checkMate(first, first.canMoveTo(chessboard.getChessComponents()), first.getChessColor());
+                    first = null;
+                }
             }
         }
     }
@@ -61,5 +63,13 @@ public class ClickController extends JComponent {
     private boolean handleSecond(ChessComponent chessComponent) {
         return chessComponent.getChessColor() != chessboard.getCurrentColor() &&
                 first.canMoveTo(chessboard.getChessComponents(), chessComponent.getChessboardPoint());
+    }
+
+    public ChessComponent getFirst() {
+        return first;
+    }
+
+    public void setFirst(ChessComponent first) {
+        this.first = first;
     }
 }

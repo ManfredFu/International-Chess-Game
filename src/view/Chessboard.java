@@ -278,6 +278,7 @@ public class Chessboard extends JComponent {
             JOptionPane.showMessageDialog(null, e.toString(), "ERROR", JOptionPane.ERROR_MESSAGE);
             initializeGame();
         }
+        clearSelecting();
         repaint();
         countDown();
     }
@@ -387,6 +388,14 @@ public class Chessboard extends JComponent {
             }
         }
         chessComponent.repaint();
+    }
+    public void clearSelecting(){
+        ChessComponent chessComponent = clickController.getFirst();
+        if(chessComponent != null) {
+            if (chessComponent.isSelected()) {
+                clickController.onClick(chessComponent);
+            }
+        }
     }
 
 
