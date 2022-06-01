@@ -34,13 +34,11 @@ public class ClickController extends JComponent {
                 //repaint in swap chess method.
                 chessboard.aimSetterFalse(chessboard.convertPointToComponent(first.canMoveTo(chessboard.getChessComponents())));
                 chessboard.swapChessComponents(first, chessComponent);
-                System.out.println(first.getChessColor());
-                System.out.println(first.getChessboardPoint());
-                chessboard.checkMate(first,first.canMoveTo(chessboard.getChessComponents()), first.getChessColor());
                 if (chessComponent.getChessType(ChessColor.WHITE) != 'k' || chessComponent.getChessType(ChessColor.BLACK) != 'K') {
                     chessboard.swapColor();
                 }
                 first.setSelected(false);
+                chessboard.checkMate(first,first.canMoveTo(chessboard.getChessComponents()), first.getChessColor());
                 first = null;
             }
         }
